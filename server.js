@@ -6,7 +6,8 @@ var cors = require('cors')
 var mongoose = require('mongoose')
 
 //the model
-var Project = require('./project-model')
+var Artist = require('./artist-model')
+var Type = require('./type-model')
 
 //setup express server
 var app = express()
@@ -16,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 app.use(logger('dev'))
 
 //setup database connection
-var connectionString = 'mongodb://admin:pass@cluster0-shard-00-00.qiabj.mongodb.net:27017,cluster0-shard-00-01.qiabj.mongodb.net:27017,cluster0-shard-00-02.qiabj.mongodb.net:27017/testdb?ssl=true&replicaSet=atlas-id226f-shard-0&authSource=admin&retryWrites=true&w=majority'
+var connectionString = 'mongodb://stacy2020:freddie3008@cluster0-shard-00-00.bg9pc.mongodb.net:27017,cluster0-shard-00-01.bg9pc.mongodb.net:27017,cluster0-shard-00-02.bg9pc.mongodb.net:27017/projects-music?ssl=true&replicaSet=atlas-9frhf9-shard-0&authSource=admin&retryWrites=true&w=majority'
 mongoose.connect(connectionString,{ useNewUrlParser: true })
 var  db = mongoose.connection
 db.once('open', () => console.log('Database connected'))
@@ -32,52 +33,52 @@ router.get('/testing', (req, res) => {
 })
 
 //CRUD projects
-router.get('/projects', (req, res) => {
-  	Project.find()
-	.then((projects) => {
-	    res.json(projects);
+router.get('/artists', (req, res) => {
+  	Artist.find()
+	.then((artist) => {
+	    res.json(artist);
   	})
 })
 
-router.get('/projects/:id', (req, res) => {
+router.get('/artists/:id', (req, res) => {
   	Project.findOne({id:req.params.id})
-	.then((project) => {
-	    res.json(project)
+	.then((artist) => {
+	    res.json(artist)
  	})
 })
 
-router.post('/projects', (req, res) => {
+router.post('/artists', (req, res) => {
 
-  	var project = new Project()
-	project.id = Date.now()
+  	var artist = new Artist()
+	artist.id = Date.now()
 	
 	var data = req.body
 	// console.log(data)
-	Object.assign(project,data)
-	project.save()
-	.then((project) => {
-	  	res.json(project)
+	Object.assign(artist,data)
+	artist.save()
+	.then((artist) => {
+	  	res.json(artist)
   	})
   
 })
 
-router.put('/projects/:id', (req, res) => {
+router.put('/artists/:id', (req, res) => {
 
-	Project.findOne({id:req.params.id})
-	.then((project) => {
+	Artist.findOne({id:req.params.id})
+	.then((artist) => {
 		var data = req.body
-		Object.assign(project,data)
-		return project.save()	
+		Object.assign(artist,data)
+		return artist.save()	
 	})
-	.then((project) => {
-		 res.json(project)
+	.then((artist) => {
+		 res.json(artist)
 	})
 
 })
 
-router.delete('/projects/:id', (req, res) => {
+router.delete('/artists/:id', (req, res) => {
 
-	Project.deleteOne({ id: req.params.id })
+	Artist.deleteOne({ id: req.params.id })
 	.then(() => {
 		res.json('deleted')
 	})
