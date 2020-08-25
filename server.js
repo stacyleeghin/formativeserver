@@ -17,7 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 app.use(logger('dev'))
 
 //setup database connection
-var connectionString = 'mongodb://stacy2020:freddie3008@cluster0-shard-00-00.bg9pc.mongodb.net:27017,cluster0-shard-00-01.bg9pc.mongodb.net:27017,cluster0-shard-00-02.bg9pc.mongodb.net:27017/projects-music?ssl=true&replicaSet=atlas-9frhf9-shard-0&authSource=admin&retryWrites=true&w=majority'
+var connectionString = 'mongodb://stacy2020:stacy2020@cluster0-shard-00-00.bg9pc.mongodb.net:27017,cluster0-shard-00-01.bg9pc.mongodb.net:27017,cluster0-shard-00-02.bg9pc.mongodb.net:27017/projects-music?ssl=true&replicaSet=atlas-9frhf9-shard-0&authSource=admin&retryWrites=true&w=majority'
+
 mongoose.connect(connectionString,{ useNewUrlParser: true })
 var  db = mongoose.connection
 db.once('open', () => console.log('Database connected'))
@@ -28,9 +29,7 @@ db.on('error', () => console.log('Database error'))
 //setup routes
 var router = express.Router();
 
-router.get('/testing', (req, res) => {
-	res.send('<h1>Testing is working</h1>')
-})
+
 
 //CRUD projects
 router.get('/artists', (req, res) => {
@@ -41,7 +40,7 @@ router.get('/artists', (req, res) => {
 })
 
 router.get('/artists/:id', (req, res) => {
-  	Project.findOne({id:req.params.id})
+  	Artist.findOne({id:req.params.id})
 	.then((artist) => {
 	    res.json(artist)
  	})
@@ -53,7 +52,6 @@ router.post('/artists', (req, res) => {
 	artist.id = Date.now()
 	
 	var data = req.body
-	// console.log(data)
 	Object.assign(artist,data)
 	artist.save()
 	.then((artist) => {
@@ -85,10 +83,57 @@ router.delete('/artists/:id', (req, res) => {
 	
 })
 
-//CRUD types
+//type CRUD
+router.get('/types', (req, res) => {
+  	Type.find()
+	.then((type) => {
+	    res.json(type);
+  	})
+})
 
+router.get('/types/:id', (req, res) => {
+  	Type.findOne({id:req.params.id})
+	.then((type) => {
+	    res.json(type)
+ 	})
+})
 
-//CRUD users - optional
+router.post('/types', (req, res) => {
+
+  	var type = new Type()
+	type.id = Date.now()
+	
+	var data = req.body
+	Object.assign(type,data)
+	type.save()
+	.then((type) => {
+	  	res.json(type)
+  	})
+  
+})
+
+router.put('/types/:id', (req, res) => {
+
+	Type.findOne({id:req.params.id})
+	.then((type) => {
+		var data = req.body
+		Object.assign(type,data)
+		return type.save()	
+	})
+	.then((type) => {
+		 res.json(type)
+	})
+
+})
+
+router.delete('/types/:id', (req, res) => {
+
+	Type.deleteOne({ id: req.params.id })
+	.then(() => {
+		res.json('deleted')
+	})
+	
+})
 
 
 //use server to serve up routes

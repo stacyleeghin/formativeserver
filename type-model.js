@@ -5,8 +5,7 @@ const Schema = mongoose.Schema
 const TypeSchema = new Schema(
   {
     id: Number,
-    name: String,
-   
+    name: String
   },
   { timestamps: true }
 )
